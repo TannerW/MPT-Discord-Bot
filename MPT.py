@@ -135,7 +135,15 @@ async def rollProg(ctx):
     
     t = float(redisClient.get('t').decode("utf-8"))
     result = RollProgressiveness(t)
-    response = str(result)
+    response = str(result) + " - "
+    if (result >= 1 and result <=5):
+        response = response + "Very Counter-Progressive"
+    elif (result >= 6 and result <=10):
+        response = response + "Mildy Counter-Progressive"
+    elif (result >= 11 and result <=15):
+        response = response + "Mildly Progressive"
+    elif (result >= 16 and result <=20):
+        response = response + "Very Progressive"
     await ctx.send(response)
 
 @bot.command(name='rollAlign', help='Roll Alignment')
