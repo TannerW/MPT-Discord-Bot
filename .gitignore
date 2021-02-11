@@ -5,5 +5,4 @@ lotus.png
 distribution.png
 __pycache__/progressivenessHelpers.cpython-38.pyc
 progressivenessHelpers.py
-__pycache__/campaignHelpers.cpython-38.pyc
-__pycache__/dataHelpers.cpython-38.pyc
+__pycache__/*

@@ -12,7 +12,7 @@ class DataHelp:
     def __init__(self, redisClient):
         self.redisClient = redisClient
         self.lock = asyncio.Lock()
-        self.userWithKey = 0
+        self.userWithKey = ""
 
     async def getCmpnDataForNoWrite(self, user):
         async with self.lock:
