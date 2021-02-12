@@ -29,9 +29,11 @@ import numpy as np
 import pandas as pd
 import math
 
-from progressivenessHelpers import *
 from dataHelpers import *
+from progressivenessHelpers import *
 from campaignHelpers import *
+from sessionHelpers import *
+from tTimer import *
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
@@ -51,6 +53,9 @@ async def on_ready():
     """
     print(f'{bot.user} has connected to Discord!')
     await bot.change_presence(activity=discord.Game(name="D&D 5e | >help")); 
+    isActive = await dataHelp.sessHelp.isSessActive("timer")
+    if isActive:
+        await bot.get_cog("tTimer").readyStartTimer()
 
 # @bot.event
 # async def on_message(message):
@@ -60,6 +65,8 @@ async def on_ready():
 #     if str(message.channel) in channels and str(message.author) in valid_users:
 #         await message.channel.send('👋') 
 
-bot.add_cog(ProgHelp(bot, redisClient, dataHelp))
+bot.add_cog(ProgHelp(bot, dataHelp))
 bot.add_cog(CampaignHelp(bot, dataHelp))
+bot.add_cog(SessionHelp(bot, dataHelp))
+bot.add_cog(tTimer(bot, dataHelp))
 bot.run(TOKEN)

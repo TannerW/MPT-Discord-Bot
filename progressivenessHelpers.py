@@ -23,6 +23,8 @@ import numpy as np
 import pandas as pd
 import math
 
+from dataHelpers import *
+
 def getAlphaAndBeta(t):
     """!
     @brief The the alpha and beta for the Beta Distribution at time t
@@ -130,9 +132,8 @@ def PlotGrowthCurve(tGuess):
     plt.clf()
 
 class ProgHelp(commands.Cog):
-    def __init__(self, bot, redisClient, dataHelp):
+    def __init__(self, bot, dataHelp):
         self.bot = bot
-        self.redisClient = redisClient
         self.dataHelp = dataHelp
 
     @commands.command(name='setT', help='Set the time and print out the growth lotus, the distribution, and alpha/beta values')
@@ -143,8 +144,9 @@ class ProgHelp(commands.Cog):
         @param ctx Server context
         @param t Time (0.0 - 1.0 where 0.0 is the start of the campaign and 1.0 is the climax of the campaign)
         """
+
+        oldT = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
         t = float(t)
-        self.redisClient.set('t', t)
         PlotGrowthCurve(t)
         GraphProgressivenessRoll(t)
         await ctx.send(file=discord.File('plotImage.png'))
@@ -154,6 +156,7 @@ class ProgHelp(commands.Cog):
         alpha, beta = getAlphaAndBeta(t)
         response = "t = " + str(t) + " | alpha = " + str(alpha) + " | beta = " + str(beta)
         await ctx.send(response)
+        await self.dataHelp.progHelp.setT(ctx.message.author.name, t)
 
     @commands.command(name='getT', help='Print current T value and growth lotus')
     async def getT(self, ctx):
@@ -162,7 +165,7 @@ class ProgHelp(commands.Cog):
 
         @param ctx Server context
         """
-        t = float(self.redisClient.get('t').decode("utf-8"))
+        t = await self.dataHelp.progHelp.getTForNoWrite()
         PlotGrowthCurve(t)
         await ctx.send(file=discord.File('lotusOverlay.png'))
         alpha, beta = getAlphaAndBeta(t)
@@ -177,7 +180,7 @@ class ProgHelp(commands.Cog):
         @param ctx Server context
         """
 
-        t = float(self.redisClient.get('t').decode("utf-8"))
+        t = await self.dataHelp.progHelp.getTForNoWrite()
         GraphProgressivenessRoll(t)
         await ctx.send(file=discord.File('distribution.png'))
         response = "t = " + str(t)
@@ -191,7 +194,7 @@ class ProgHelp(commands.Cog):
         @param ctx Server context
         """
         
-        t = float(self.redisClient.get('t').decode("utf-8"))
+        t = await self.dataHelp.progHelp.getTForNoWrite()
         result = RollProgressiveness(t)
         response = str(result) + " - "
         if (result >= 1 and result <=5):
@@ -202,7 +205,7 @@ class ProgHelp(commands.Cog):
             response = response + "Mildly Progressive"
         elif (result >= 16 and result <=20):
             response = response + "Very Progressive"
-        await self.dataHelp.incrementNumProgRolls();
+        await self.dataHelp.progHelp.incrementNumProgRolls()
         await ctx.send(response)
 
     @commands.command(name='rollAlign', help='Roll Alignment')
