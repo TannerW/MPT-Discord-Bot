@@ -40,7 +40,7 @@ TOKEN = os.getenv('TOKEN')
 
 bot = commands.Bot(command_prefix='>')
 
-redisClient = redis.Redis(host='192.168.1.110', port=6380, db=0)
+redisClient = redis.Redis(host='192.168.1.110', port=6381, db=0)
 
 dataHelp = DataHelp(redisClient)
 
@@ -55,7 +55,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="D&D 5e | >help")); 
     isActive = await dataHelp.sessHelp.isSessActive("timer")
     if isActive:
-        await bot.get_cog("tTimer").readyStartTimer()
+        await bot.get_cog("tTimer").startTimersHelper()
 
 # @bot.event
 # async def on_message(message):

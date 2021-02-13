@@ -102,6 +102,7 @@ class SessionHelp(commands.Cog):
                 response = "Uh oh... looks like the session was either never started or has already ended..."
         else: 
             response = "No session data..."
+            await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
                 
         await ctx.send(response)
 

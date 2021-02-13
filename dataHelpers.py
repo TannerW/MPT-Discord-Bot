@@ -51,6 +51,8 @@ class SessDataHelp:
 
     async def isSessActive(self, user):
         async with self.lockAndKey.lock:
+            if not self.redisClient.get('isSessionActive'):
+                self.redisClient.set('isSessionActive', 0)
             print(user+": I am reading isSessionActive")
             self.lockAndKey.userWithKey = ""
             return int(self.redisClient.get('isSessionActive'))
@@ -96,11 +98,15 @@ class ProgDataHelp:
 
     async def getTForNoWrite(self):
         async with self.lockAndKey.lock:
+            if not self.redisClient.get('t'):
+                self.redisClient.set('t', 0.0)
             self.lockAndKey.userWithKey = ""
             return float(self.redisClient.get('t').decode("utf-8"))
 
     async def getTForWrite(self, user):
         await self.lockAndKey.lock.acquire()
+        if not self.redisClient.get('t'):
+            self.redisClient.set('t', 0.0)
         self.lockAndKey.userWithKey = user
         print(self.lockAndKey.userWithKey + " has read t and has acquired the lock for reading")
         return float(self.redisClient.get('t').decode("utf-8"))
@@ -125,6 +131,30 @@ class ProgDataHelp:
             self.redisClient.set('sessionData', json.dumps(sessData))
             self.lockAndKey.userWithKey = ""
 
+class TimerDataHelp:
+    def __init__(self, redisClient, lockAndKey):
+        self.redisClient = redisClient
+        self.lockAndKey = lockAndKey
+    
+    async def getTimerPausedProgressStatus(self):
+        if not self.redisClient.get('timerPausedProgress'):
+            self.redisClient.set('timerPausedProgress', 0)
+        return int(self.redisClient.get('timerPausedProgress'))
+    
+    async def enableTimerPausedProgress(self):
+        return self.redisClient.set('timerPausedProgress', 1)
+
+    async def disableTimerPausedProgress(self):
+        return self.redisClient.set('timerPausedProgress', 0)
+
+    async def getTValueOfNextStoryBeat(self):
+        if not self.redisClient.get('tValueOfNextBeat'):
+            self.redisClient.set('tValueOfNextBeat', list(timesOfBeats.keys())[0])
+        return float(self.redisClient.get('tValueOfNextBeat'))
+
+    async def setTValueOfNextStoryBeat(self, t):
+        return self.redisClient.set('tValueOfNextBeat', t)
+
 class DataHelp:
     def __init__(self, redisClient):
         self.redisClient = redisClient
@@ -132,4 +162,5 @@ class DataHelp:
         self.cmpnHelp = CmpnDataHelp(self.redisClient, self.lockAndKey)
         self.sessHelp = SessDataHelp(self.redisClient, self.lockAndKey)
         self.progHelp = ProgDataHelp(self.redisClient, self.lockAndKey)
+        self.timerHelp = TimerDataHelp(self.redisClient, self.lockAndKey)
 

@@ -50,7 +50,7 @@ class CampaignHelp(commands.Cog):
 
                 temp = campaignDataDefault
                 temp["Campaign name"] = nameMsg.content
-                temp["Expected length"] = int(durationMsg.content)
+                temp["Expected length"] = float(durationMsg.content)
                 temp["Timestamp of last activity"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
                 response = "Current campaign data " + json.dumps(temp)
                 await ctx.send(response)
@@ -65,6 +65,7 @@ class CampaignHelp(commands.Cog):
                 await self.dataHelp.sessHelp.setSessInactive(ctx.message.author.name)
                 t = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
                 await self.dataHelp.progHelp.setT(ctx.message.author.name, 0.0)
+                await self.dataHelp.timerHelp.disableTimerPausedProgress()
                 response = "Set campaign name as " + nameMsg.content + "\n Would you like to start a new session now? [y/n]:"
                 await ctx.send(response)
                 newSessAns = await self.bot.wait_for('message', check=check)
@@ -108,4 +109,22 @@ class CampaignHelp(commands.Cog):
 
                 cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
                 response = "Campaign data set as " + json.dumps(cmpnData)
+                await ctx.send(response)
+
+        @commands.command(name='setPlayedSeconds', help='test')
+        async def setPlayedSeconds(self, ctx, seconds:int):
+                """!
+                @brief This command sets the played seconds for the current campaign
+
+                @param ctx Server context
+                """
+                
+                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.message.author.name)
+                cmpnData[len(cmpnData)-1]["Seconds of plot play"] = seconds
+                await self.dataHelp.cmpnHelp.setCmpnData(ctx.message.author.name, cmpnData)
+                t = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
+                t = float(cmpnData[len(cmpnData)-1]["Seconds of plot play"])/float(cmpnData[len(cmpnData)-1]["Expected length"]*60.0*60.0)
+                await self.dataHelp.progHelp.setT(ctx.message.author.name, t)
+
+                response = "Current campaign played seconds set to: " + str(seconds)
                 await ctx.send(response)
