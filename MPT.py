@@ -33,6 +33,7 @@ from dataHelpers import *
 from progressivenessHelpers import *
 from campaignHelpers import *
 from sessionHelpers import *
+from adventuringDayHelpers import *
 from tTimer import *
 
 load_dotenv()
@@ -40,7 +41,7 @@ TOKEN = os.getenv('TOKEN')
 
 bot = commands.Bot(command_prefix='>')
 
-redisClient = redis.Redis(host='192.168.1.110', port=6381, db=0)
+redisClient = redis.Redis(host='192.168.1.110', port=6380, db=0)
 
 dataHelp = DataHelp(redisClient)
 
@@ -68,5 +69,6 @@ async def on_ready():
 bot.add_cog(ProgHelp(bot, dataHelp))
 bot.add_cog(CampaignHelp(bot, dataHelp))
 bot.add_cog(SessionHelp(bot, dataHelp))
+bot.add_cog(AdvenDayHelp(bot, dataHelp))
 bot.add_cog(tTimer(bot, dataHelp))
 bot.run(TOKEN)

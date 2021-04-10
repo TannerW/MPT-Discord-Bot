@@ -77,10 +77,10 @@ class tTimer(commands.Cog):
                 await self.stopTimersHelper()
                 beforeAskDT = datetime.now(pytz.timezone('US/Eastern'))
                 # check progress...
-                await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:")
+                await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:", tts=ttsEnabled)
                 ans = await self.bot.wait_for('message', check=check)
                 while (ans.content != 'n' and ans.content != 'y'):
-                    await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:")
+                    await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:", tts=ttsEnabled)
                     ans = await self.bot.wait_for('message', check=check)
 
                 afterAskDT = datetime.now(pytz.timezone('US/Eastern'))
@@ -89,21 +89,21 @@ class tTimer(commands.Cog):
 
                 # ask if they have been playing while bot was waiting for its question to be answered 
                 if totalNumSecs > 60.0:
-                    await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing pay) while I've been waiting? [y/n]:")
+                    await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing play) while I've been waiting? [y/n]:", tts=ttsEnabled)
                     delayedAns = await self.bot.wait_for('message', check=check)
                     while (delayedAns.content != 'n' and delayedAns.content != 'y'):
-                        await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing pay) while I've been waiting? [y/n]:")
+                        await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing play) while I've been waiting? [y/n]:", tts=ttsEnabled)
                         delayedAns = await self.bot.wait_for('message', check=check)
 
                     if delayedAns.content == 'y':
-                        await self.bot.get_channel(self.chanID).send("Okay! Thank you for letting me know! I am going to adjust my clocks real quick...")
+                        await self.bot.get_channel(self.chanID).send("Okay! Thank you for letting me know! I am going to adjust my clocks real quick...", tts=ttsEnabled)
                         cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite("timer")
                         secsOfPlay = totalNumSecs + float(cmpnData[len(cmpnData)-1]["Seconds of progress delay"])
                         cmpnData[len(cmpnData)-1]["Seconds of progress delay"] = secsOfPlay
                         await self.dataHelp.cmpnHelp.setCmpnData("timer", cmpnData)
 
                     elif delayedAns.content == 'n':
-                        await self.bot.get_channel(self.chanID).send("Okay! I just ask to make sure I don't need to adjust my clocks... moving on...")
+                        await self.bot.get_channel(self.chanID).send("Okay! I just ask to make sure I don't need to adjust my clocks... moving on...", tts=ttsEnabled)
 
                 if ans.content == 'y':
                     #lock t
@@ -124,18 +124,18 @@ class tTimer(commands.Cog):
                     cmpnData[len(cmpnData)-1]["Seconds of progress delay"] = 0.0 #reset prog delay time in storage as the DelayTimer is stopped
 
 
-                    await self.bot.get_channel(self.chanID).send("There has been a progress delay of " + str(delay) +" seconds. Would you like to update the expected campaign length to reflect this delay? [y/n]:")
+                    await self.bot.get_channel(self.chanID).send("There has been a progress delay of " + str(delay) +" seconds. Would you like to update the expected campaign length to reflect this delay? [y/n]:", tts=ttsEnabled)
                     delayAns = await self.bot.wait_for('message', check=check)
                     while (delayAns.content != 'n' and delayAns.content != 'y'):
-                        await self.bot.get_channel(self.chanID).send("There has been a progress delay of " + str(delay) +" seconds. Would you like to update the expected campaign length to reflect this delay? [y/n]:")
+                        await self.bot.get_channel(self.chanID).send("There has been a progress delay of " + str(delay) +" seconds. Would you like to update the expected campaign length to reflect this delay? [y/n]:", tts=ttsEnabled)
                         delayAns = await self.bot.wait_for('message', check=check)
 
                     if delayAns.content == 'y':
                         #recalculate expected length to incorporate the delay
                         cmpnData[len(cmpnData)-1]["Expected length"] = cmpnData[len(cmpnData)-1]["Expected length"] + ((delay/60.0)/60.0)
-                        await self.bot.get_channel(self.chanID).send("Okay, delay has been applied. Expected time from campaign start to campaign climax is now " + str(cmpnData[len(cmpnData)-1]["Expected length"]) + " hours.")
+                        await self.bot.get_channel(self.chanID).send("Okay, delay has been applied. Expected time from campaign start to campaign climax is now " + str(cmpnData[len(cmpnData)-1]["Expected length"]) + " hours.", tts=ttsEnabled)
                     elif delayAns.content == 'n':
-                        await self.bot.get_channel(self.chanID).send("Okay, this delay will be disregarded. Expected time from campaign start to campaign climax remains " + str(cmpnData[len(cmpnData)-1]["Expected length"]) + " hours.")
+                        await self.bot.get_channel(self.chanID).send("Okay, this delay will be disregarded. Expected time from campaign start to campaign climax remains " + str(cmpnData[len(cmpnData)-1]["Expected length"]) + " hours.", tts=ttsEnabled)
 
                     #update seconds played to reflect new t-value and possible time expansion
                     cmpnData[len(cmpnData)-1]["Seconds of plot play"] = (t*float(cmpnData[len(cmpnData)-1]["Expected length"]*60.0*60.0))
@@ -165,10 +165,10 @@ class tTimer(commands.Cog):
             return msg.channel == self.bot.get_channel(self.chanID)
 
         beforeAskDT = datetime.now(pytz.timezone('US/Eastern'))
-        await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:")
+        await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:", tts=ttsEnabled)
         ans = await self.bot.wait_for('message', check=check)
         while (ans.content != 'n' and ans.content != 'y'):
-            await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:")
+            await self.bot.get_channel(self.chanID).send("Have you reached the " + timesOfBeats[await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()] + " yet? [y/n]:", tts=ttsEnabled)
             ans = await self.bot.wait_for('message', check=check)
 
         afterAskDT = datetime.now(pytz.timezone('US/Eastern'))
@@ -177,14 +177,14 @@ class tTimer(commands.Cog):
 
         # ask if they have been playing while bot was waiting for its question to be answered
         if totalNumSecs > 60.0:
-            await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing pay) while I've been waiting? [y/n]:")
+            await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing play) while I've been waiting? [y/n]:", tts=ttsEnabled)
             delayedAns = await self.bot.wait_for('message', check=check)
             while (delayedAns.content != 'n' and delayedAns.content != 'y'):
-                await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing pay) while I've been waiting? [y/n]:")
+                await self.bot.get_channel(self.chanID).send("Hhhmmm... you took "+str(totalNumSecs)+" seconds to answer my question... Have you been playing (plot progressing play) while I've been waiting? [y/n]:", tts=ttsEnabled)
                 delayedAns = await self.bot.wait_for('message', check=check)
 
             if delayedAns.content == 'y':
-                await self.bot.get_channel(self.chanID).send("Okay! Thank you for letting me know! I am going to adjust my clocks real quick...")
+                await self.bot.get_channel(self.chanID).send("Okay! Thank you for letting me know! I am going to adjust my clocks real quick...", tts=ttsEnabled)
                 cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite("timer")
                 secsOfPlay = totalNumSecs + float(cmpnData[len(cmpnData)-1]["Seconds of plot play"])
                 secondsToClimax = cmpnData[len(cmpnData)-1]["Expected length"]*60.0*60.0
@@ -197,7 +197,7 @@ class tTimer(commands.Cog):
                 await self.dataHelp.progHelp.setT("timer", t)
 
             elif delayedAns.content == 'n':
-                await self.bot.get_channel(self.chanID).send("Okay! I just ask to make sure I don't need to adjust my clocks... moving on...")
+                await self.bot.get_channel(self.chanID).send("Okay! I just ask to make sure I don't need to adjust my clocks... moving on...", tts=ttsEnabled)
 
 
         
@@ -282,7 +282,7 @@ class tTimer(commands.Cog):
             t = float(secsOfPlay)/float(secondsToClimax)
             await self.dataHelp.progHelp.setT("timer", t)
 
-            await self.bot.get_channel(self.chanID).send("Seconds of play: " + str(secsOfPlay) + " | t-value: " + str(t) +" | t-value to look for: " + str(await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()))
+            #await self.bot.get_channel(self.chanID).send("Seconds of play: " + str(secsOfPlay) + " | t-value: " + str(t) +" | t-value to look for: " + str(await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()))
 
             if t >= await self.dataHelp.timerHelp.getTValueOfNextStoryBeat():
                 await self.askAboutProgress()
@@ -309,7 +309,7 @@ class tTimer(commands.Cog):
             await self.dataHelp.cmpnHelp.setCmpnData("timer", cmpnData)
 
             t = await self.dataHelp.progHelp.getTForNoWrite()
-            await self.bot.get_channel(self.chanID).send("Seconds of progress delay: " + str(secsOfDelay) + " | t-value: " + str(t) +" | t-value to look for: " + str(await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()))
+            #await self.bot.get_channel(self.chanID).send("Seconds of progress delay: " + str(secsOfDelay) + " | t-value: " + str(t) +" | t-value to look for: " + str(await self.dataHelp.timerHelp.getTValueOfNextStoryBeat()))
 
 
     @tasks.loop(seconds=2.0)

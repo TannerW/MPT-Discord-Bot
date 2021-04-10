@@ -37,12 +37,12 @@ class CampaignHelp(commands.Cog):
                         return msg.author == ctx.author and msg.channel == ctx.channel
 
                 cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.message.author.name)
-                await ctx.send(f"Type campaign name:")
+                await ctx.send(f"Type campaign name:", tts=ttsEnabled)
 
                 nameMsg = await self.bot.wait_for('message', check=check)
                 print(nameMsg.content)
 
-                await ctx.send(f"How many hours do you expect this campaign to take to reach the story climax?:")
+                await ctx.send(f"How many hours do you expect this campaign to take to reach the story climax?:", tts=ttsEnabled)
                 durationMsg = await self.bot.wait_for('message', check=check)
 
                 response = "Current campaign data " + json.dumps(cmpnData)
@@ -67,7 +67,7 @@ class CampaignHelp(commands.Cog):
                 await self.dataHelp.progHelp.setT(ctx.message.author.name, 0.0)
                 await self.dataHelp.timerHelp.disableTimerPausedProgress()
                 response = "Set campaign name as " + nameMsg.content + "\n Would you like to start a new session now? [y/n]:"
-                await ctx.send(response)
+                await ctx.send(response, tts=ttsEnabled)
                 newSessAns = await self.bot.wait_for('message', check=check)
                 if newSessAns.content == 'y':
                         await self.bot.get_cog("SessionHelp").startNewSess(ctx)

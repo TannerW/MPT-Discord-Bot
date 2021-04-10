@@ -91,6 +91,35 @@ class SessDataHelp:
             self.lockAndKey.userWithKey = ""
             self.lockAndKey.lock.release()
 
+class AdvenDayDataHelp:
+    def __init__(self, redisClient, lockAndKey):
+        self.redisClient = redisClient
+        self.lockAndKey = lockAndKey
+
+    async def getAdvenDayDataForNoWrite(self, user):
+        async with self.lockAndKey.lock:
+            print(user+": I am reading adventure day data")
+            self.lockAndKey.userWithKey = ""
+            return json.loads(self.redisClient.get('advenDayData').decode("utf-8"))
+
+    async def getAdvenDayDataForWrite(self, user):
+        await self.lockAndKey.lock.acquire()
+        self.lockAndKey.userWithKey = user
+        print(self.lockAndKey.userWithKey + " has read AdvenDayData and has acquired the lock for reading")
+        data = self.redisClient.get('advenDayData')
+        if not data:
+            return []
+        else:
+            return json.loads(data.decode("utf-8"))
+
+    async def setAdvenDayData(self, user, AdvenDayData):
+        if (self.lockAndKey.lock.locked() and user == self.lockAndKey.userWithKey):
+            print(user+": I am writing AdvenDayData")
+            self.redisClient.set('advenDayData', json.dumps(AdvenDayData))
+            self.lockAndKey.userWithKey = ""
+            self.lockAndKey.lock.release()
+
+
 class ProgDataHelp:
     def __init__(self, redisClient, lockAndKey):
         self.redisClient = redisClient
@@ -161,6 +190,7 @@ class DataHelp:
         self.lockAndKey = LockAndKey()
         self.cmpnHelp = CmpnDataHelp(self.redisClient, self.lockAndKey)
         self.sessHelp = SessDataHelp(self.redisClient, self.lockAndKey)
+        self.advenDayHelp = AdvenDayDataHelp(self.redisClient, self.lockAndKey)
         self.progHelp = ProgDataHelp(self.redisClient, self.lockAndKey)
         self.timerHelp = TimerDataHelp(self.redisClient, self.lockAndKey)
 

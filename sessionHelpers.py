@@ -1,7 +1,7 @@
 """!
  @file sessionHelpers.py
  @author Owen Tanner Wilkerson (tanner.wilkerson@gmail.com)
- @brief Helpers used the operate on campaign data
+ @brief Helpers used the operate on session data
  @version 0.1
  @date 2021-02-11
  
@@ -77,7 +77,7 @@ class SessionHelp(commands.Cog):
         await self.dataHelp.sessHelp.setSessActive(ctx.message.author.name)
         await self.bot.get_cog("tTimer").startTimer(ctx)
         response = "Session started! Enjoy your adventuring!!"
-        await ctx.send(response)
+        await ctx.send(response, tts=ttsEnabled)
 
     @commands.command(name='endSess', help='test')
     async def endSess(self, ctx):
@@ -104,7 +104,7 @@ class SessionHelp(commands.Cog):
             response = "No session data..."
             await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
                 
-        await ctx.send(response)
+        await ctx.send(response, tts=ttsEnabled)
 
     @commands.command(name='getSessData', help='test')
     async def getSessData(self, ctx):
