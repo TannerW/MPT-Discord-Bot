@@ -30,7 +30,7 @@ async def test_cmpnHelp_mismatch():
     assert testReturnOriginal != testReturn,"test failed because the campnData in Redis did not mismatch what was supposed to be written during this test."
 
 @pytest.mark.asyncio
-async def test_cmpnHelp_writingLock():
+async def test_cmpnHelp_writingLock_locked():
     lockAndKey = LockAndKey()
     cmpnHelp = CmpnDataHelp(redisClient, lockAndKey)
     testJson = campaignDataDefault
@@ -43,3 +43,18 @@ async def test_cmpnHelp_writingLock():
         return
 
     assert False
+
+@pytest.mark.asyncio
+async def test_cmpnHelp_writingLock_notLocked():
+    lockAndKey = LockAndKey()
+    cmpnHelp = CmpnDataHelp(redisClient, lockAndKey)
+    testJson = campaignDataDefault
+    await cmpnHelp.getCmpnDataForNoWrite("notTester")
+
+    try:
+        await asyncio.wait_for(cmpnHelp.getCmpnDataForWrite("tester"), timeout=10.0)
+    except asyncio.TimeoutError:
+        assert False
+        return
+
+    assert True
