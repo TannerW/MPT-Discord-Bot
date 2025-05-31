@@ -26,8 +26,8 @@ class SessionHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.command(name='startNewSess', help='test')
-    async def startNewSess(self, ctx):
+    @commands.hybrid_command(name='startnewsess', help='Starts a new gaming session for the current campaign.', description='Begins a new session, linking it to the current campaign and starting the session timer.')
+    async def startnewsess(self, ctx):
         """!
         @brief Start a new session
 
@@ -38,9 +38,9 @@ class SessionHelp(commands.Cog):
             return msg.author == ctx.author and msg.channel == ctx.channel
 
         # get name of current campaign
-        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
+        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.author.name)
         cmpnName = cmpnData[len(cmpnData)-1]["Campaign name"] 
-        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.author.name)
 
 
         response = "Current session data " + json.dumps(sessData)
@@ -73,48 +73,48 @@ class SessionHelp(commands.Cog):
         else:
             sessData.append(temp)
 
-        await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
-        await self.dataHelp.sessHelp.setSessActive(ctx.message.author.name)
-        await self.bot.get_cog("tTimer").startTimer(ctx)
+        await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
+        await self.dataHelp.sessHelp.setSessActive(ctx.author.name)
+        await self.bot.get_cog("tTimer").starttimer(ctx)
         response = "Session started! Enjoy your adventuring!!"
-        await ctx.send(response, tts=ttsEnabled)
+        await ctx.send(response)
 
-    @commands.command(name='endSess', help='test')
-    async def endSess(self, ctx):
+    @commands.hybrid_command(name='endsess', help='Ends the current gaming session.', description='Finalizes the current session, recording the end time and stopping the session timer.')
+    async def endsess(self, ctx):
         """!
         @brief End session
 
         @param ctx Server context
         """
 
-        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.author.name)
 
         response = ""
         if sessData:
             if sessData[len(sessData)-1]["Session end time"] == 0:
                 sessData[len(sessData)-1]["Session end time"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
                 sessData[len(sessData)-1]["Timestamp of last activity"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
-                await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
-                await self.dataHelp.sessHelp.setSessInactive(ctx.message.author.name)
-                await self.bot.get_cog("tTimer").stopTimer(ctx)
+                await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
+                await self.dataHelp.sessHelp.setSessInactive(ctx.author.name)
+                await self.bot.get_cog("tTimer").stoptimer(ctx)
                 response = "Session ended! I hope you enjoyed your adventuring!!"
             else:
                 response = "Uh oh... looks like the session was either never started or has already ended..."
         else: 
             response = "No session data..."
-            await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
+            await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
                 
-        await ctx.send(response, tts=ttsEnabled)
+        await ctx.send(response)
 
-    @commands.command(name='getSessData', help='test')
-    async def getSessData(self, ctx):
+    @commands.hybrid_command(name='getsessdata', help='Retrieves all data for the current session.', description='Gets and displays all stored data for the currently active gaming session.')
+    async def getsessdata(self, ctx):
         """!
         @brief This command set data for the current active session
 
         @param ctx Server context
         """
 
-        sessData = await self.dataHelp.sessHelp.getSessDataForNoWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForNoWrite(ctx.author.name)
         response = "Session data set as " + json.dumps(sessData)
         print(response)
         await ctx.send(response)
