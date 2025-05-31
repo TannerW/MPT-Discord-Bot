@@ -26,7 +26,7 @@ class AdvenDayHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.hybrid_command(name='startnewadvenday', help='Starts a new adventuring day for the current campaign.', description='Begins a new adventuring day, prompting for number of characters, their names, and levels to set an XP goal.')
+    @commands.hybrid_command(name='startnewadvenday', help='Starts a new adventuring day for the current campaign.', description='Starts new adventuring day. Prompts for character numbers, names, and levels for XP goal.')
     async def startnewadvenday(self, ctx):
         """!
         @brief Start a new adventuring day

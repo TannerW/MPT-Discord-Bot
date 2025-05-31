@@ -151,7 +151,7 @@ class tTimer(commands.Cog):
                     
 
 
-    @commands.hybrid_command(name='starttimer', help='Starts the automatic campaign progress timer.', description='Starts or resumes the background timer that manages campaign time "t" and progress towards story beats.')
+    @commands.hybrid_command(name='starttimer', help='Starts the automatic campaign progress timer.', description='Starts/resumes the background timer for campaign time "t" and story beat progress.')
     async def starttimer(self, ctx):
         await self.startTimersHelper()
 

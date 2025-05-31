@@ -136,7 +136,7 @@ class ProgHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.hybrid_command(name='sett', help='Sets campaign time "t" (0.0-1.0) and shows related graphs.', description='Set campaign time "t" (0.0 to 1.0, start to climax). Displays growth lotus, distribution, alpha/beta values.')
+    @commands.hybrid_command(name='sett', help='Sets campaign time "t" (0.0-1.0) and shows related graphs.', description='Set campaign time "t" (0-1, start to climax). Shows growth lotus, distribution, alpha/beta.')
     async def sett(self, ctx, t):
         """!
         @brief This command get the name of the current campaign
@@ -208,7 +208,7 @@ class ProgHelp(commands.Cog):
         await self.dataHelp.progHelp.incrementNumProgRolls()
         await ctx.send(response)
 
-    @commands.hybrid_command(name='rollalign', help='Rolls a d20 for an alignment-based outcome.', description='Rolls a standard d20 and provides a corresponding alignment interpretation (Good, Bad, Neutral, etc.).')
+    @commands.hybrid_command(name='rollalign', help='Rolls a d20 for an alignment-based outcome.', description='Rolls a d20 for an alignment interpretation (Good, Bad, Neutral, etc.).')
     async def rollalign(self, ctx):
         """!
         @brief 
