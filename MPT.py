@@ -53,6 +53,12 @@ async def on_ready():
     @brief This function runs one the bot is ready and connected to the server
     """
     print(f'{bot.user} has connected to Discord!')
+    try:
+        synced = await bot.tree.sync()
+        print(f"Synced {len(synced)} commands")
+    except Exception as e:
+        print(f"Failed to sync commands: {e}")
+
     await bot.change_presence(activity=discord.Game(name="D&D 5e | >help")); 
     isActive = await dataHelp.sessHelp.isSessActive("timer")
     if isActive:
