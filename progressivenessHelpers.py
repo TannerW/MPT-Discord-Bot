@@ -136,8 +136,8 @@ class ProgHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.hybrid_command(name='setT', help='Sets campaign time "t" (0.0-1.0) and shows related graphs.', description='Set campaign time "t" (0.0 to 1.0, start to climax). Displays growth lotus, distribution, alpha/beta values.')
-    async def setT(self, ctx, t):
+    @commands.hybrid_command(name='sett', help='Sets campaign time "t" (0.0-1.0) and shows related graphs.', description='Set campaign time "t" (0.0 to 1.0, start to climax). Displays growth lotus, distribution, alpha/beta values.')
+    async def sett(self, ctx, t):
         """!
         @brief This command get the name of the current campaign
 
@@ -158,8 +158,8 @@ class ProgHelp(commands.Cog):
         await ctx.send(response)
         await self.dataHelp.progHelp.setT(ctx.author.name, t)
 
-    @commands.hybrid_command(name='getT', help='Gets current campaign time "t" and shows growth lotus.', description='Displays the current campaign time "t", its alpha/beta values, and the growth lotus overlay.')
-    async def getT(self, ctx):
+    @commands.hybrid_command(name='gett', help='Gets current campaign time "t" and shows growth lotus.', description='Displays the current campaign time "t", its alpha/beta values, and the growth lotus overlay.')
+    async def gett(self, ctx):
         """!
         @brief 
 
@@ -172,8 +172,8 @@ class ProgHelp(commands.Cog):
         response = "t = " + str(t) + " | alpha = " + str(alpha) + " | beta = " + str(beta)
         await ctx.send(response)
 
-    @commands.hybrid_command(name='printDistribution', help='Shows the current progressiveness roll distribution graph.', description='Displays a plot of the current progressiveness roll distribution based on "t".')
-    async def printDistribution(self, ctx):
+    @commands.hybrid_command(name='printdistribution', help='Shows the current progressiveness roll distribution graph.', description='Displays a plot of the current progressiveness roll distribution based on "t".')
+    async def printdistribution(self, ctx):
         """!
         @brief 
 
@@ -186,8 +186,8 @@ class ProgHelp(commands.Cog):
         response = "t = " + str(t)
         await ctx.send(response)
 
-    @commands.hybrid_command(name='rollProg', help='Rolls on the progressiveness table based on current "t".', description='Performs a progressiveness roll (1-20) influenced by "t" and describes the outcome.')
-    async def rollProg(self, ctx):
+    @commands.hybrid_command(name='rollprog', help='Rolls on the progressiveness table based on current "t".', description='Performs a progressiveness roll (1-20) influenced by "t" and describes the outcome.')
+    async def rollprog(self, ctx):
         """!
         @brief 
 
@@ -208,8 +208,8 @@ class ProgHelp(commands.Cog):
         await self.dataHelp.progHelp.incrementNumProgRolls()
         await ctx.send(response)
 
-    @commands.hybrid_command(name='rollAlign', help='Rolls a d20 for an alignment-based outcome.', description='Rolls a standard d20 and provides a corresponding alignment interpretation (Good, Bad, Neutral, etc.).')
-    async def rollAlign(self, ctx):
+    @commands.hybrid_command(name='rollalign', help='Rolls a d20 for an alignment-based outcome.', description='Rolls a standard d20 and provides a corresponding alignment interpretation (Good, Bad, Neutral, etc.).')
+    async def rollalign(self, ctx):
         """!
         @brief 
 

@@ -39,8 +39,8 @@ class tTimer(commands.Cog):
             await asyncio.sleep(3) #wait for timer to finish current loop
             await self.bot.get_channel(self.chanID).send("Progress delay timer stopped!")
     
-    @commands.hybrid_command(name='stopTimer', help='Stops the automatic campaign progress timer.', description='Stops the background timer that dynamically updates campaign time "t" or the progress delay timer.')
-    async def stopTimer(self, ctx):
+    @commands.hybrid_command(name='stoptimer', help='Stops the automatic campaign progress timer.', description='Stops the background timer that dynamically updates campaign time "t" or the progress delay timer.')
+    async def stoptimer(self, ctx):
         await self.stopTimersHelper()
 
     async def startTtimer(self):
@@ -151,12 +151,12 @@ class tTimer(commands.Cog):
                     
 
 
-    @commands.hybrid_command(name='startTimer', help='Starts the automatic campaign progress timer.', description='Starts or resumes the background timer that manages campaign time "t" and progress towards story beats.')
-    async def startTimer(self, ctx):
+    @commands.hybrid_command(name='starttimer', help='Starts the automatic campaign progress timer.', description='Starts or resumes the background timer that manages campaign time "t" and progress towards story beats.')
+    async def starttimer(self, ctx):
         await self.startTimersHelper()
 
-    @commands.hybrid_command(name='setTimerTargetTvalue', help='Manually sets the next target "t" value for the timer.', description='Overrides the timer_s next target "t" value for reaching a story beat.')
-    async def setTimerTargetTvalue(self, ctx, t:float):
+    @commands.hybrid_command(name='settimertargettvalue', help='Manually sets the next target "t" value for the timer.', description='Overrides the timer_s next target "t" value for reaching a story beat.')
+    async def settimertargettvalue(self, ctx, t:float):
         await self.dataHelp.timerHelp.setTValueOfNextStoryBeat(t)
         await self.bot.get_channel(self.chanID).send("Timer target t-value set to: " + str(t))
 

@@ -26,8 +26,8 @@ class CampaignHelp(commands.Cog):
                 self.bot = bot
                 self.dataHelp = dataHelp
 
-        @commands.hybrid_command(name='startNewCmpn', help='Initiates the process to start a new campaign.', description='Starts a new D&D campaign. Prompts for campaign name and expected duration.')
-        async def startNewCmpn(self, ctx):
+        @commands.hybrid_command(name='startnewcmpn', help='Initiates the process to start a new campaign.', description='Starts a new D&D campaign. Prompts for campaign name and expected duration.')
+        async def startnewcmpn(self, ctx):
                 """!
                 @brief Start a new campaign
 
@@ -70,11 +70,11 @@ class CampaignHelp(commands.Cog):
                 await ctx.send(response)
                 newSessAns = await self.bot.wait_for('message', check=check)
                 if newSessAns.content == 'y':
-                        await self.bot.get_cog("SessionHelp").startNewSess(ctx)
+                        await self.bot.get_cog("SessionHelp").startnewsess(ctx)
                 
 
-        @commands.hybrid_command(name='getCmpnName', help='Retrieves the name of the current campaign.', description='Gets and displays the name of the currently active campaign.')
-        async def getCmpnName(self, ctx):
+        @commands.hybrid_command(name='getcmpnname', help='Retrieves the name of the current campaign.', description='Gets and displays the name of the currently active campaign.')
+        async def getcmpnname(self, ctx):
                 """!
                 @brief This command get the name of the current campaign
 
@@ -99,8 +99,8 @@ class CampaignHelp(commands.Cog):
         #         response = "Campaign data set as " + json.dumps(campaignDataDefault)
         #         await ctx.send(response)
 
-        @commands.hybrid_command(name='getCmpnData', help='Retrieves all data for the current campaign.', description='Gets and displays all stored data for the currently active campaign.')
-        async def getCmpnData(self, ctx):
+        @commands.hybrid_command(name='getcmpndata', help='Retrieves all data for the current campaign.', description='Gets and displays all stored data for the currently active campaign.')
+        async def getcmpndata(self, ctx):
                 """!
                 @brief This command set data for the current active campaign
 
@@ -111,8 +111,8 @@ class CampaignHelp(commands.Cog):
                 response = "Campaign data set as " + json.dumps(cmpnData)
                 await ctx.send(response)
 
-        @commands.hybrid_command(name='setPlayedSeconds', help='Sets the total seconds played for the current campaign.', description='Updates the "Seconds of plot play" for the current campaign and recalculates "t".')
-        async def setPlayedSeconds(self, ctx, seconds:int):
+        @commands.hybrid_command(name='setplayedseconds', help='Sets the total seconds played for the current campaign.', description='Updates the "Seconds of plot play" for the current campaign and recalculates "t".')
+        async def setplayedseconds(self, ctx, seconds:int):
                 """!
                 @brief This command sets the played seconds for the current campaign
 
