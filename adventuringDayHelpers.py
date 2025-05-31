@@ -26,7 +26,7 @@ class AdvenDayHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.command(name='startNewAdvenDay', help='test')
+    @commands.hybrid_command(name='startNewAdvenDay', help='test', description='test')
     async def startNewAdvenDay(self, ctx):
         """!
         @brief Start a new adventuring day
@@ -38,9 +38,9 @@ class AdvenDayHelp(commands.Cog):
             return msg.author == ctx.author and msg.channel == ctx.channel
 
         # get name of current campaign
-        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
+        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.author.name)
         cmpnName = cmpnData[len(cmpnData)-1]["Campaign name"] 
-        advenDayData = await self.dataHelp.advenDayHelp.getAdvenDayDataForWrite(ctx.message.author.name)
+        advenDayData = await self.dataHelp.advenDayHelp.getAdvenDayDataForWrite(ctx.author.name)
 
 
         response = "Current session data " + json.dumps(advenDayData)
@@ -49,13 +49,13 @@ class AdvenDayHelp(commands.Cog):
         temp = advenDayDataDefault
         temp["Campaign name"] = cmpnName
         temp["AdvenDay start time"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
-        await ctx.send("How many characters will be participating in this adventuring day?", tts=ttsEnabled)
+        await ctx.send("How many characters will be participating in this adventuring day?")
         num = await self.bot.wait_for('message', check=check)
 
         for i in range(int(num.content)):
-            await ctx.send("What is the name of character " + str(i+1) +"?", tts=ttsEnabled)
+            await ctx.send("What is the name of character " + str(i+1) +"?")
             name = await self.bot.wait_for('message', check=check)
-            await ctx.send("What is " + name.content +"'s level?", tts=ttsEnabled)
+            await ctx.send("What is " + name.content +"'s level?")
             lvl = await self.bot.wait_for('message', check=check)
             temp["PCs"][name.content] = int(lvl.content)
 
@@ -73,9 +73,9 @@ class AdvenDayHelp(commands.Cog):
         else:
             advenDayData.append(temp)
 
-        await self.dataHelp.advenDayHelp.setAdvenDayData(ctx.message.author.name, advenDayData)
+        await self.dataHelp.advenDayHelp.setAdvenDayData(ctx.author.name, advenDayData)
         response = "Adventuring day started! Enjoy your adventuring!!"
-        await ctx.send(response, tts=ttsEnabled)
+        await ctx.send(response)
 
     # @commands.command(name='endSess', help='test')
     # async def endSess(self, ctx):

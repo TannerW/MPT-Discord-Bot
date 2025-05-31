@@ -136,7 +136,7 @@ class ProgHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.command(name='setT', help='Set the time and print out the growth lotus, the distribution, and alpha/beta values')
+    @commands.hybrid_command(name='setT', help='Set the time and print out the growth lotus, the distribution, and alpha/beta values', description='Set the time and print out the growth lotus, the distribution, and alpha/beta values')
     async def setT(self, ctx, t):
         """!
         @brief This command get the name of the current campaign
@@ -145,7 +145,7 @@ class ProgHelp(commands.Cog):
         @param t Time (0.0 - 1.0 where 0.0 is the start of the campaign and 1.0 is the climax of the campaign)
         """
 
-        oldT = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
+        oldT = await self.dataHelp.progHelp.getTForWrite(ctx.author.name)
         t = float(t)
         PlotGrowthCurve(t)
         GraphProgressivenessRoll(t)
@@ -156,9 +156,9 @@ class ProgHelp(commands.Cog):
         alpha, beta = getAlphaAndBeta(t)
         response = "t = " + str(t) + " | alpha = " + str(alpha) + " | beta = " + str(beta)
         await ctx.send(response)
-        await self.dataHelp.progHelp.setT(ctx.message.author.name, t)
+        await self.dataHelp.progHelp.setT(ctx.author.name, t)
 
-    @commands.command(name='getT', help='Print current T value and growth lotus')
+    @commands.hybrid_command(name='getT', help='Print current T value and growth lotus', description='Print current T value and growth lotus')
     async def getT(self, ctx):
         """!
         @brief 
@@ -172,7 +172,7 @@ class ProgHelp(commands.Cog):
         response = "t = " + str(t) + " | alpha = " + str(alpha) + " | beta = " + str(beta)
         await ctx.send(response)
 
-    @commands.command(name='printDistribution', help='Print plot of current distribution')
+    @commands.hybrid_command(name='printDistribution', help='Print plot of current distribution', description='Print plot of current distribution')
     async def printDistribution(self, ctx):
         """!
         @brief 
@@ -186,7 +186,7 @@ class ProgHelp(commands.Cog):
         response = "t = " + str(t)
         await ctx.send(response)
 
-    @commands.command(name='rollProg', help='Roll Progressiveness')
+    @commands.hybrid_command(name='rollProg', help='Roll Progressiveness', description='Roll Progressiveness')
     async def rollProg(self, ctx):
         """!
         @brief 
@@ -208,7 +208,7 @@ class ProgHelp(commands.Cog):
         await self.dataHelp.progHelp.incrementNumProgRolls()
         await ctx.send(response)
 
-    @commands.command(name='rollAlign', help='Roll Alignment')
+    @commands.hybrid_command(name='rollAlign', help='Roll Alignment', description='Roll Alignment')
     async def rollAlign(self, ctx):
         """!
         @brief 

@@ -26,7 +26,7 @@ class CampaignHelp(commands.Cog):
                 self.bot = bot
                 self.dataHelp = dataHelp
 
-        @commands.command(name='startNewCmpn', help='test')
+        @commands.hybrid_command(name='startNewCmpn', help='test', description='test')
         async def startNewCmpn(self, ctx):
                 """!
                 @brief Start a new campaign
@@ -36,13 +36,13 @@ class CampaignHelp(commands.Cog):
                 def check(msg):
                         return msg.author == ctx.author and msg.channel == ctx.channel
 
-                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.message.author.name)
-                await ctx.send(f"Type campaign name:", tts=ttsEnabled)
+                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.author.name)
+                await ctx.send(f"Type campaign name:")
 
                 nameMsg = await self.bot.wait_for('message', check=check)
                 print(nameMsg.content)
 
-                await ctx.send(f"How many hours do you expect this campaign to take to reach the story climax?:", tts=ttsEnabled)
+                await ctx.send(f"How many hours do you expect this campaign to take to reach the story climax?:")
                 durationMsg = await self.bot.wait_for('message', check=check)
 
                 response = "Current campaign data " + json.dumps(cmpnData)
@@ -61,19 +61,19 @@ class CampaignHelp(commands.Cog):
                 else:
                         cmpnData.append(temp)
 
-                await self.dataHelp.cmpnHelp.setCmpnData(ctx.message.author.name, cmpnData)
-                await self.dataHelp.sessHelp.setSessInactive(ctx.message.author.name)
-                t = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
-                await self.dataHelp.progHelp.setT(ctx.message.author.name, 0.0)
+                await self.dataHelp.cmpnHelp.setCmpnData(ctx.author.name, cmpnData)
+                await self.dataHelp.sessHelp.setSessInactive(ctx.author.name)
+                t = await self.dataHelp.progHelp.getTForWrite(ctx.author.name)
+                await self.dataHelp.progHelp.setT(ctx.author.name, 0.0)
                 await self.dataHelp.timerHelp.disableTimerPausedProgress()
                 response = "Set campaign name as " + nameMsg.content + "\n Would you like to start a new session now? [y/n]:"
-                await ctx.send(response, tts=ttsEnabled)
+                await ctx.send(response)
                 newSessAns = await self.bot.wait_for('message', check=check)
                 if newSessAns.content == 'y':
                         await self.bot.get_cog("SessionHelp").startNewSess(ctx)
                 
 
-        @commands.command(name='getCmpnName', help='test')
+        @commands.hybrid_command(name='getCmpnName', help='test', description='test')
         async def getCmpnName(self, ctx):
                 """!
                 @brief This command get the name of the current campaign
@@ -81,7 +81,7 @@ class CampaignHelp(commands.Cog):
                 @param ctx Server context
                 """
                 
-                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
+                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.author.name)
                 response = "Current campaign name is: " + json.dumps(cmpnData[len(cmpnData)-1]["Campaign name"])
                 await ctx.send(response)
 
@@ -99,7 +99,7 @@ class CampaignHelp(commands.Cog):
         #         response = "Campaign data set as " + json.dumps(campaignDataDefault)
         #         await ctx.send(response)
 
-        @commands.command(name='getCmpnData', help='test')
+        @commands.hybrid_command(name='getCmpnData', help='test', description='test')
         async def getCmpnData(self, ctx):
                 """!
                 @brief This command set data for the current active campaign
@@ -107,11 +107,11 @@ class CampaignHelp(commands.Cog):
                 @param ctx Server context
                 """
 
-                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
+                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.author.name)
                 response = "Campaign data set as " + json.dumps(cmpnData)
                 await ctx.send(response)
 
-        @commands.command(name='setPlayedSeconds', help='test')
+        @commands.hybrid_command(name='setPlayedSeconds', help='test', description='test')
         async def setPlayedSeconds(self, ctx, seconds:int):
                 """!
                 @brief This command sets the played seconds for the current campaign
@@ -119,12 +119,12 @@ class CampaignHelp(commands.Cog):
                 @param ctx Server context
                 """
                 
-                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.message.author.name)
+                cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite(ctx.author.name)
                 cmpnData[len(cmpnData)-1]["Seconds of plot play"] = seconds
-                await self.dataHelp.cmpnHelp.setCmpnData(ctx.message.author.name, cmpnData)
-                t = await self.dataHelp.progHelp.getTForWrite(ctx.message.author.name)
+                await self.dataHelp.cmpnHelp.setCmpnData(ctx.author.name, cmpnData)
+                t = await self.dataHelp.progHelp.getTForWrite(ctx.author.name)
                 t = float(cmpnData[len(cmpnData)-1]["Seconds of plot play"])/float(cmpnData[len(cmpnData)-1]["Expected length"]*60.0*60.0)
-                await self.dataHelp.progHelp.setT(ctx.message.author.name, t)
+                await self.dataHelp.progHelp.setT(ctx.author.name, t)
 
                 response = "Current campaign played seconds set to: " + str(seconds)
                 await ctx.send(response)

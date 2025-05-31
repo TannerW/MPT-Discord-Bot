@@ -26,7 +26,7 @@ class SessionHelp(commands.Cog):
         self.bot = bot
         self.dataHelp = dataHelp
 
-    @commands.command(name='startNewSess', help='test')
+    @commands.hybrid_command(name='startNewSess', help='test', description='test')
     async def startNewSess(self, ctx):
         """!
         @brief Start a new session
@@ -38,9 +38,9 @@ class SessionHelp(commands.Cog):
             return msg.author == ctx.author and msg.channel == ctx.channel
 
         # get name of current campaign
-        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.message.author.name)
+        cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForNoWrite(ctx.author.name)
         cmpnName = cmpnData[len(cmpnData)-1]["Campaign name"] 
-        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.author.name)
 
 
         response = "Current session data " + json.dumps(sessData)
@@ -73,13 +73,13 @@ class SessionHelp(commands.Cog):
         else:
             sessData.append(temp)
 
-        await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
-        await self.dataHelp.sessHelp.setSessActive(ctx.message.author.name)
+        await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
+        await self.dataHelp.sessHelp.setSessActive(ctx.author.name)
         await self.bot.get_cog("tTimer").startTimer(ctx)
         response = "Session started! Enjoy your adventuring!!"
-        await ctx.send(response, tts=ttsEnabled)
+        await ctx.send(response)
 
-    @commands.command(name='endSess', help='test')
+    @commands.hybrid_command(name='endSess', help='test', description='test')
     async def endSess(self, ctx):
         """!
         @brief End session
@@ -87,26 +87,26 @@ class SessionHelp(commands.Cog):
         @param ctx Server context
         """
 
-        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForWrite(ctx.author.name)
 
         response = ""
         if sessData:
             if sessData[len(sessData)-1]["Session end time"] == 0:
                 sessData[len(sessData)-1]["Session end time"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
                 sessData[len(sessData)-1]["Timestamp of last activity"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
-                await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
-                await self.dataHelp.sessHelp.setSessInactive(ctx.message.author.name)
+                await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
+                await self.dataHelp.sessHelp.setSessInactive(ctx.author.name)
                 await self.bot.get_cog("tTimer").stopTimer(ctx)
                 response = "Session ended! I hope you enjoyed your adventuring!!"
             else:
                 response = "Uh oh... looks like the session was either never started or has already ended..."
         else: 
             response = "No session data..."
-            await self.dataHelp.sessHelp.setSessData(ctx.message.author.name, sessData)
+            await self.dataHelp.sessHelp.setSessData(ctx.author.name, sessData)
                 
-        await ctx.send(response, tts=ttsEnabled)
+        await ctx.send(response)
 
-    @commands.command(name='getSessData', help='test')
+    @commands.hybrid_command(name='getSessData', help='test', description='test')
     async def getSessData(self, ctx):
         """!
         @brief This command set data for the current active session
@@ -114,7 +114,7 @@ class SessionHelp(commands.Cog):
         @param ctx Server context
         """
 
-        sessData = await self.dataHelp.sessHelp.getSessDataForNoWrite(ctx.message.author.name)
+        sessData = await self.dataHelp.sessHelp.getSessDataForNoWrite(ctx.author.name)
         response = "Session data set as " + json.dumps(sessData)
         print(response)
         await ctx.send(response)

@@ -39,7 +39,7 @@ from tTimer import *
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
-bot = commands.Bot(command_prefix='>')
+bot = commands.Bot(command_prefix='>', intents=discord.Intents.default())
 
 redisClient = redis.Redis(host='192.168.1.110', port=6380, db=0)
 
