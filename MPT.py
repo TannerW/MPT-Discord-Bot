@@ -41,7 +41,7 @@ TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='>', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 
 redisClient = redis.Redis(host='192.168.1.110', port=6380, db=0)
 
