@@ -47,7 +47,7 @@ class tTimer(commands.Cog):
         cmpnData = await self.dataHelp.cmpnHelp.getCmpnDataForWrite("timer")
         cmpnData[len(cmpnData)-1]["Last timer tick"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
         #reset prog delay time
-        cmpnData[len(cmpnData)-1]["Seconds of progress delay"] == 0.0
+        cmpnData[len(cmpnData)-1]["Seconds of progress delay"] = 0.0 # Corrected from == to =
         await self.dataHelp.cmpnHelp.setCmpnData("timer", cmpnData)
         await self.updateWatchForTval()
         self.timer.start()

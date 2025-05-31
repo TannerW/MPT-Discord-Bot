@@ -17,6 +17,7 @@ import json
 from datetime import datetime
 from dateutil import relativedelta
 import pytz
+import copy # Import the copy module
 
 from dataDefaults import *
 from dataHelpers import *
@@ -46,7 +47,7 @@ class AdvenDayHelp(commands.Cog):
         response = "Current session data " + json.dumps(advenDayData)
         await ctx.send(response)
 
-        temp = advenDayDataDefault
+        temp = copy.deepcopy(advenDayDataDefault) # Use deepcopy here
         temp["Campaign name"] = cmpnName
         temp["AdvenDay start time"] = datetime.now(pytz.timezone('US/Eastern')).timestamp()
         await ctx.send("How many characters will be participating in this adventuring day?", tts=ttsEnabled)
