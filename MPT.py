@@ -39,7 +39,9 @@ from tTimer import *
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
 
-bot = commands.Bot(command_prefix='/', intents=discord.Intents.default())
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='>', intents=intents)
 
 redisClient = redis.Redis(host='192.168.1.110', port=6380, db=0)
 
@@ -72,9 +74,14 @@ async def on_ready():
 #     if str(message.channel) in channels and str(message.author) in valid_users:
 #         await message.channel.send('👋') 
 
-bot.add_cog(ProgHelp(bot, dataHelp))
-bot.add_cog(CampaignHelp(bot, dataHelp))
-bot.add_cog(SessionHelp(bot, dataHelp))
-bot.add_cog(AdvenDayHelp(bot, dataHelp))
-bot.add_cog(tTimer(bot, dataHelp))
+async def actual_setup_hook():
+    print("Loading cogs...") # Optional: for logging
+    await bot.add_cog(ProgHelp(bot, dataHelp))
+    await bot.add_cog(CampaignHelp(bot, dataHelp))
+    await bot.add_cog(SessionHelp(bot, dataHelp))
+    await bot.add_cog(AdvenDayHelp(bot, dataHelp))
+    await bot.add_cog(tTimer(bot, dataHelp))
+    print("Cogs loaded successfully.") # Optional: for logging
+
+bot.setup_hook = actual_setup_hook
 bot.run(TOKEN)
